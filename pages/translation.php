@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-07 13:48:29
- * @modify date 2023-06-07 15:25:08
+ * @modify date 2023-06-08 14:40:03
  * @license GPLv3
  * @desc [description]
  */
@@ -15,6 +15,12 @@ defined('INDEX_AUTH') OR die('Direct access not allowed!');
 require SB . 'admin/default/session.inc.php';
 require SB . 'admin/default/session_check.inc.php';
 
+$location = __DIR__ . DS . basename($_GET['page']??'') . '.php';
+if (isset($_GET['page']) && file_exists($location)) {
+    include $location;
+    exit;
+}
+
 ?>
 <div class="menuBox">
 <div class="menuBoxInner memberIcon">
@@ -23,7 +29,7 @@ require SB . 'admin/default/session_check.inc.php';
     </div>
     <div class="sub_section">
 	<div class="btn-group">
-        <a href="<?php echo MWB; ?>membership/index.php" class="btn btn-primary"><?= __('Create Locale'); ?></a>
+        <a href="<?= url(['page' => 'add_locale']) ?>" class="btn btn-primary openPopUp notAJAX" title="<?= __('Locale Form') ?>"><?= __('Create Locale'); ?></a>
 	</div>
 	</div>
 </div>
@@ -33,6 +39,7 @@ if (!isset($_GET['form'])) {
     $finder = new Finder();
     $finder
         ->directories()
+        ->depth('== 0')
         ->in(__DIR__ . '/../resources/lang');
 
     // existension check

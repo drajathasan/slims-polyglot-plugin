@@ -10,8 +10,9 @@
     "autoload": {
         "psr-4": {
             "Drajathasan\\Polyglot\\": "src/",
-            "Gettext\\Scanner\\": "src/php-scanner/"
-        }
+            "Gettext\\Scanner\\": "src/php-scanner/src"
+        },
+        "files": ["src/helper.php"]
     },
     "authors": [
         {

@@ -12,4 +12,8 @@
 $plugin = \SLiMS\Plugins::getInstance();
 $plugin->registerAutoload();
 
+// constant
+define('POLYGLOT_BASE', basename(__DIR__));
+define('POLYGLOT_BASE_PATH', __DIR__);
+
 $plugin->registerMenu('system', 'Translatation', __DIR__ . '/pages/translation.php');
