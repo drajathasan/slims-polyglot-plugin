@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-08 07:03:18
- * @modify date 2023-06-08 16:07:11
+ * @modify date 2023-06-09 08:19:20
  * @license GPLv3
  * @desc [description]
  */
@@ -42,6 +42,9 @@ if (isset($_POST['create'])) {
         $phpScanner->scanFile($file->getPathname());
     }
 
+    toastr(__('Generate data to PO'))->info();
+    ob_flush();
+    flush();
     //Save the translations in .po files
     $generator = new PoGenerator();
     
