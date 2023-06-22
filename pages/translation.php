@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-07 13:48:29
- * @modify date 2023-06-09 15:01:56
+ * @modify date 2023-06-22 12:54:12
  * @license GPLv3
  * @desc [description]
  */
@@ -42,10 +42,11 @@ if (isset($_POST['publish']) && isset($_POST['langCode']))
     $loader = new PoLoader();
     $generator = new MoGenerator();
     $translations = $loader->loadFile($localePath = POLYGLOT_BASE_PATH . '/resources/lang/' . basename($_POST['langCode']) . '/LC_MESSAGES/messages.po');
-    
+    $langDir = str_replace(SB . 'plugins/', '', dirname($localePath));
     Storage::plugin()->makeDirectory($newDir = 'lang' . DS . basename($_POST['langCode']) . DS . 'LC_MESSAGES' . DS);
     $generator->generateFile($translations, SB . 'plugins' . DS . $newDir . DS . 'messages.mo');
-    exit(Json::stringify(['status' => true, 'message' => __('Data has been saved!')])->withHeader());
+    Storage::plugin()->copy($langDir . '/meta.json', 'lang/'.basename($_POST['langCode']).'/LC_MESSAGES/meta.json');
+    exit(Json::stringify(['status' => true, 'message' => __('Data has been published!')])->withHeader());
 }
 
 ?>
@@ -83,12 +84,12 @@ if (!isset($_GET['form'])) {
     echo '<div class="card-deck mx-3">';
     foreach ($finder as $directory) {
         $lastModified = \Carbon\Carbon::parse(date('Y-m-d H:i:s', $directory->getMTime()))->locale(config('default_lang'))->isoFormat('dddd, LL');
-        $icon = substr($directory->getRelativePathname(), -2);
+        $icon = SWB . 'template/default/assets/flags/4x3/' . strtolower(substr($directory->getRelativePathname(), -2) ). '.svg';
         $url = url(['page' => 'edit', 'lang' => $directory->getRelativePathname()]);
         echo <<<HTML
         <div class="card">
             <div class="card-body">
-                <img src="https://www.countryflagicons.com/FLAT/64/{$icon}.png">
+                <img src="{$icon}" style="width: 70px; height: 50px">
                 <h5 class="card-title font-weight-bold">{$directory->getRelativePathname()}</h5>
                 <p class="card-text">Translation of {$directory->getRelativePathname()}</p>
                 <p class="card-text d-flex flex-row justify-content-between align-items-center">

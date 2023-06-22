@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-09 09:40:38
- * @modify date 2023-06-09 13:58:23
+ * @modify date 2023-06-22 15:58:03
  * @license GPLv3
  * @desc [description]
  */
@@ -88,7 +88,15 @@ try {
         flush();
     }
     
-    
+    // Alert
+    if (ini_get('max_input_vars') < ($totalTranslation = count($translationItem)))
+    {
+        echo '<div class="alert alert-warning">';
+        echo '<h3>Warning</h3>';
+        echo str_replace('{total_translate}', $totalTranslation, __('Max input vars in your system is less than {total_translate}. Make it greater than {total_translate}.'));
+        echo '</div>';
+    }
+
     // Header info
     echo '<div class="alert alert-info">';
     echo '<h3>Translatation Info</h3>';
@@ -98,6 +106,16 @@ try {
         </div>';
     }
     echo '</div>';
+
+    echo <<<HTML
+        <script>
+            parent.$('#cboxLoadedContent').prepend(`
+            <div class="w-100 bg-white p-3">
+                <input type="text" class="form-control" placeholder="Search Some Text" style="position: absolute;bottom: 10%;"/>
+            </div>
+            `)
+        </script>
+    HTML;
     // End header info
     
     echo $form->printOut();
