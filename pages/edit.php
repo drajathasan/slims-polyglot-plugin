@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-09 09:40:38
- * @modify date 2023-06-22 15:58:03
+ * @modify date 2023-06-23 07:36:42
  * @license GPLv3
  * @desc [description]
  */
@@ -87,13 +87,25 @@ try {
         ob_flush();
         flush();
     }
+
+    
+    $totalTranslation = count($translationItem);
+    $show = ini_get('max_input_vars') < $totalTranslation;
+    if (isset($_GET['action']) && $_GET['action'] === 'max_input_vars' && $show)
+    {
+        $currentHtaccess = file_get_contents($filePath = SB . '.htaccess');
+        $currentHtaccess = $currentHtaccess . "\n" . 'php_value max_input_vars ' . (count($translationItem) + 1000);
+        file_put_contents($filePath, $currentHtaccess);
+        redirect()->simbioAJAX(url: url(), selector: '#pageContent', position: 'parent.');
+    }
     
     // Alert
-    if (ini_get('max_input_vars') < ($totalTranslation = count($translationItem)))
+    if ($show)
     {
         echo '<div class="alert alert-warning">';
         echo '<h3>Warning</h3>';
         echo str_replace('{total_translate}', $totalTranslation, __('Max input vars in your system is less than {total_translate}. Make it greater than {total_translate}.'));
+        echo '<a target="submitExec" href="' . url(['action' => 'max_input_vars']) . '" class="btn btn-primary">' . __('Set Up') . '</a>';
         echo '</div>';
     }
 
