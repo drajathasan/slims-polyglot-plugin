@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-09 09:40:38
- * @modify date 2023-06-23 07:36:42
+ * @modify date 2024-07-25 22:20:04
  * @license GPLv3
  * @desc [description]
  */
@@ -20,6 +20,15 @@ require SIMBIO . 'simbio_GUI/form_maker/simbio_form_table_AJAX.inc.php';
 // set global variable
 $loader = new PoLoader();
 $targetPath = POLYGLOT_BASE_PATH . '/resources/lang/' . basename($_GET['lang']??$_POST['lang']??'') . '/LC_MESSAGES/messages.po';
+
+if (isset($_GET['max_input_vars'])) {
+    $input = (int)$_GET['max_input_vars'];
+    $content  = 'php_value max_input_vars ' . $input .PHP_EOL;
+    $content .= 'php_value post_max_size 16M'  . PHP_EOL;
+    file_put_contents(SB . '.htaccess', $content, FILE_APPEND | LOCK_EX);
+    sleep(2);
+    redirect()->back();
+}
 
 // Update process
 if (isset($_POST['update']))
@@ -105,7 +114,7 @@ try {
         echo '<div class="alert alert-warning">';
         echo '<h3>Warning</h3>';
         echo str_replace('{total_translate}', $totalTranslation, __('Max input vars in your system is less than {total_translate}. Make it greater than {total_translate}.'));
-        echo '<a target="submitExec" href="' . url(['action' => 'max_input_vars']) . '" class="btn btn-primary">' . __('Set Up') . '</a>';
+        echo '<a href="' . url(['max_input_vars' => $totalTranslation + 100]) . '" onclick="top.window.toastr.info(\'Please wait\', \'Info\')" class="ml-3 btn btn-primary">' . __('Increase Now') . '</a>';
         echo '</div>';
     }
 

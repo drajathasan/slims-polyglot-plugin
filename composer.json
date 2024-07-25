@@ -3,7 +3,6 @@
     "description": "A plugin to create,edit, and merge your custom locale to main SLiMS source code",
     "type": "library",
     "require": {
-        "symfony/finder": "^6.3",
         "nikic/php-parser": "^4.15"
     },
     "license": "GPL-3.0",

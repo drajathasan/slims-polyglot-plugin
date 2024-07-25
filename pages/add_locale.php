@@ -3,7 +3,7 @@
  * @author Drajat Hasan
  * @email drajathasan20@gmail.com
  * @create date 2023-06-08 07:03:18
- * @modify date 2023-06-09 08:19:20
+ * @modify date 2024-07-25 22:32:45
  * @license GPLv3
  * @desc [description]
  */
@@ -27,11 +27,52 @@ if (isset($_POST['create'])) {
     $phpScanner = new PhpScanner(Translations::create($_POST['code']));
     $phpScanner->setDefaultDomain($_POST['code']);
 
+    $excludes = [
+      'bacon',
+      'dasprid',
+      'league',
+      'paragonie',
+      'spomky-labs',
+      'phpseclib',
+      'parsedown',
+      'phpplot',
+      'collection',
+      'oaipmh',
+      'ezyang',
+      'phpoffice',
+      'sphinx',
+      'symfony',
+      'mysqldump-php',
+      'csrf',
+      'lang',
+      'guzzlehttp',
+      'uuid',
+      'nesbot',
+      'marc',
+      'zend',
+      'recaptcha',
+      'phpbarcode',
+      'PHPMailer',
+      'markbaker',
+      'maennchen',
+      'math',
+      'flex',
+      'psr',
+      'myclabs',
+      'Zend',
+      'plugins'
+    ];
+
     $iterator = Finder::create()
         ->files()
-        ->name('*.php')
-        ->exclude(SB . 'plugins/')
-        ->in(SB);
+        ->name('*.php');
+
+    foreach ($excludes as $name) {
+      $iterator->exclude($name);
+    }
+
+    $iterator->in(SB);
+    
     
     // Create folder
     Storage::plugin()->makeDirectory($targetDirectory = POLYGLOT_BASE . '/resources/lang/' . $_POST['code'] . '/LC_MESSAGES/');
@@ -66,6 +107,10 @@ if (isset($_POST['create'])) {
         }
         $generator->generateFile($translations, SB . 'plugins/' . $targetDirectory . "messages.po");
     }
+
+    // create meta file
+    
+    file_put_contents(SB . 'plugins/' . $targetDirectory . '/meta.json', );
 
     toastr(__('Data has been generated'))->success();
     
